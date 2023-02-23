@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <title>Mi primer mapa</title>
+    <style>
+      #map {
+        width: 600px;
+        height: 400px;
+      }
+    </style>
+  </head>
+  <body>
+    
+    <h1>Workshop Django + Google Maps - eSource</h1>
+    <p>
+      Api Key: {{apiKey}}
+      My first name is {{ first_name }}. My last name is {{ last_name }}.
+    </p>
+    <div id="map"></div>
+    <script>
+
+      // The escapejs filter escapes text to be used in JavaScript strings.
+      var list = "{{list | escapejs}}"
+
+      list = JSON.parse(list)
+
+      console.log(list)
+
+      function initMap() {
+        var mapa = new google.maps.Map(document.getElementById("map"), {
+          center: list[0],
+          zoom: 6,
+          styles: [
+            {
+              elementType: "geometry",
+              stylers: [
+                {
+                  color: "#212121",
+                },
+              ],
+            },
+            {
+              elementType: "labels.icon",
+              stylers: [
+                {
+                  visibility: "off",
+                },
+              ],
+            },
+            {
+              elementType: "labels.text.fill",
+              stylers: [
+                {
+                  color: "#757575",
+                },
+              ],
+            },
+            {
+              elementType: "labels.text.stroke",
+              stylers: [
+                {
+                  color: "#212121",
+                },
+              ],
+            },
+            {
+              featureType: "administrative",
+              elementType: "geometry",
+              stylers: [
+                {
+                  color: "#757575",
+                },
+              ],
+            },
+            {
+              featureType: "administrative.country",
+              elementType: "labels.text.fill",
+              stylers: [
+                {
+                  color: "#9e9e9e",
+                },
+              ],
+            },
+            {
+              featureType: "administrative.land_parcel",
+              stylers: [
+                {
+                  visibility: "off",
+                },
+              ],
+            },
+            {
+              featureType: "administrative.locality",
+              elementType: "labels.text.fill",
+              stylers: [
+                {
+                  color: "#bdbdbd",
+                },
+              ],
+            },
+            {
+              featureType: "administrative.neighborhood",
+              stylers: [
+                {
+                  visibility: "off",
+                },
+              ],
+            },
+            {
+              featureType: "poi",
+              elementType: "labels.text",
+              stylers: [
+                {
+                  visibility: "off",
+                },
+              ],
+            },
+            {
+              featureType: "poi",
+              elementType: "labels.text.fill",
+              stylers: [
+                {
+                  color: "#757575",
+                },
+              ],
+            },
+            {
+              featureType: "poi.park",
+              elementType: "geometry",
+              stylers: [
+                {
+                  color: "#181818",
+                },
+              ],
+            },
+            {
+              featureType: "poi.park",
+              elementType: "labels.text.fill",
+              stylers: [
+                {
+                  color: "#616161",
+                },
+              ],
+            },
+            {
+              featureType: "poi.park",
+              elementType: "labels.text.stroke",
+              stylers: [
+                {
+                  color: "#1b1b1b",
+                },
+              ],
+            },
+            {
+              featureType: "road",
+              stylers: [
+                {
+                  visibility: "off",
+                },
+              ],
+            },
+            {
+              featureType: "road",
+              elementType: "geometry.fill",
+              stylers: [
+                {
+                  color: "#2c2c2c",
+                },
+              ],
+            },
+            {
+              featureType: "road",
+              elementType: "labels",
+              stylers: [
+                {
+                  visibility: "off",
+                },
+              ],
+            },
+            {
+              featureType: "road",
+              elementType: "labels.text.fill",
+              stylers: [
+                {
+                  color: "#8a8a8a",
+                },
+              ],
+            },
+            {
+              featureType: "road.arterial",
+              elementType: "geometry",
+              stylers: [
+                {
+                  color: "#373737",
+                },
+              ],
+            },
+            {
+              featureType: "road.highway",
+              elementType: "geometry",
+              stylers: [
+                {
+                  color: "#3c3c3c",
+                },
+              ],
+            },
+            {
+              featureType: "road.highway.controlled_access",
+              elementType: "geometry",
+              stylers: [
+                {
+                  color: "#4e4e4e",
+                },
+              ],
+            },
+            {
+              featureType: "road.local",
+              elementType: "labels.text.fill",
+              stylers: [
+                {
+                  color: "#616161",
+                },
+              ],
+            },
+            {
+              featureType: "transit",
+              elementType: "labels.text.fill",
+              stylers: [
+                {
+                  color: "#757575",
+                },
+              ],
+            },
+            {
+              featureType: "water",
+              elementType: "geometry",
+              stylers: [
+                {
+                  color: "#000000",
+                },
+              ],
+            },
+            {
+              featureType: "water",
+              elementType: "labels.text",
+              stylers: [
+                {
+                  visibility: "off",
+                },
+              ],
+            },
+            {
+              featureType: "water",
+              elementType: "labels.text.fill",
+              stylers: [
+                {
+                  color: "#3d3d3d",
+                },
+              ],
+            },
+          ],
+        });
+
+        // add markers from the list
+        for (var i = 0; i < list.length; i++) {
+          addMarker(list[i], mapa);
+        }
+      }
+
+      function addMarker(location, mapa) {
+        var marker = new google.maps.Marker({
+          position: location,
+          map: mapa,
+        });
+
+        var infoWindow = new google.maps.InfoWindow({
+          content:
+            "Esta es la sucursal con coords: " +
+            location.lat +
+            ", " +
+            location.lng,
+        });
+
+        marker.addListener("click", function () {
+          infoWindow.open(mapa, marker);
+        });
+      }
+
+      window.initMap = initMap;
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key={{apiKey}}&callback=initMap"></script>
+    
+  </body>
+</html>
